@@ -1,4 +1,4 @@
-from asf_search.MultiBurst import (
+from asf_network.MultiBurst import (
     MultiBurst,
     MultipleOrbitError,
     InvalidMultiBurstCountError,
@@ -37,7 +37,7 @@ FAILING_MULTIBURST_DICTS = [
     {
         "173_370305": ("IW1", "IW2", "IW3"),
         "173_370306": ("IW1", "IW2", "IW3"),
-        "100_213509": ("IW1", "IW2", "IW3")      
+        "100_213509": ("IW1", "IW2", "IW3")
     },
     # disconnected with holes
     {

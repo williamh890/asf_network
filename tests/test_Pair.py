@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 from asf_search.ASFSearchOptions import ASFSearchOptions
 from asf_search.search import product_search
-from asf_search import Pair
+from asf_network import Pair
 import numpy as np
 
 

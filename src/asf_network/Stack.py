@@ -2,12 +2,13 @@ from collections import defaultdict, deque
 from copy import copy
 from datetime import datetime, date
 from typing import Optional, List, Tuple, Dict
+
+import pandas as pd
 import warnings
 
 from asf_search import ASFProduct, ASFSearchOptions
-from Pair import Pair
-from exceptions import DateTypeError
-from warnings import PairNotInFullStackWarning
+from asf_network.Pair import Pair
+from asf_network.exceptions import DateTypeError, PairNotInFullStackWarning
 import numpy as np
 
 try:
@@ -15,7 +16,7 @@ try:
 except ImportError:
     from dateutil.parser import parse as parse_datetime
 
-date_like = str | date | datetime
+date_like = str | date | datetime | pd.Timestamp
 
 
 class Stack:

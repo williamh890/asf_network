@@ -1,12 +1,11 @@
-
 import importlib.util
 import math
 import warnings
 
-from .ASFProduct import ASFProduct
-from .baseline import calculate_perpendicular_baselines
-from .exceptions import CoherenceEstimationError
-from .warnings import OptionalDependencyWarning
+from asf_search import ASFProduct
+from asf_search.baseline import calculate_perpendicular_baselines
+
+from asf_network.exceptions import CoherenceEstimationError, OptionalDependencyWarning
 import pytz
 
 try:
@@ -23,12 +22,13 @@ class Pair:
 
     Two pairs are equivalent if they have matching reference and secondary dates
     """
+
     def __init__(self, ref: ASFProduct, sec: ASFProduct):
         self.ref = ref
         self.sec = sec
 
         self.perpendicular = calculate_perpendicular_baselines(
-            ref.properties['sceneName'], 
+            ref.properties['sceneName'],
             [sec, ref])[0].properties['perpendicularBaseline']
 
         ref_time = parse_datetime(ref.properties["startTime"])
@@ -64,7 +64,7 @@ class Pair:
 
     def estimate_s1_mean_coherence(self) -> float:
         '''
-        Estimates mean coherence for a Pair of Sentinel-1 scenes or bursts using the 11367x4367 overview of the 2019-2020 
+        Estimates mean coherence for a Pair of Sentinel-1 scenes or bursts using the 11367x4367 overview of the 2019-2020
         VV COH data from the Global Seasonal Sentinel-1 Interferometric Coherence and Backscatter Dataset:
         https://asf.alaska.edu/datasets/daac/global-seasonal-sentinel-1-interferometric-coherence-and-backscatter-dataset/
 

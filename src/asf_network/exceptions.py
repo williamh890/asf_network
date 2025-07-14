@@ -1,46 +1,20 @@
-class ASFError(Exception):
-    """Base ASF Exception, not intended for direct use"""
+class ASFNetworkError(Exception):
+    """Base ASF Network Exception, not intended for direct use"""
 
 
-class ASFSearchError(ASFError):
+class ASFGroupError(ASFNetworkError):
     """Base search-related Exception"""
 
-class ASFGroupError(ASFError):
-    """Base search-related Exception"""
 
-class ASFSearch4xxError(ASFSearchError):
-    """Raise when CMR returns a 4xx error"""
-
-
-class ASFSearch5xxError(ASFSearchError):
-    """Raise when CMR returns a 5xx error"""
-
-
-class ASFBaselineError(ASFSearchError):
-    """Raise when baseline related errors occur"""
-
-
-class ASFDownloadError(ASFError):
-    """Base download-related Exception"""
-
-
-class ASFAuthenticationError(ASFError):
-    """Base download-related Exception"""
-
-
-class ASFWKTError(ASFError):
-    """Raise when wkt related errors occur"""
-
-
-class DateTypeError(ASFError):
+class DateTypeError(ASFNetworkError):
     """Raise when a provided date format is unable to be parsed"""
 
 
-class CoherenceEstimationError(ASFError):
+class CoherenceEstimationError(ASFNetworkError):
     """Raise if coherence estimation is requested for a Pair with a temporal baseline > 48 days"""
 
 
-class MultiBurstError(ASFError):
+class MultiBurstError(ASFNetworkError):
     """Base MultiBurst Exception, not intended  direct use"""
 
 
@@ -60,13 +34,16 @@ class AntimeridianError(MultiBurstError):
     """Raise when a multiburst collection intersects the Antimeridian"""
 
 
-class CMRError(Exception):
-    """Base CMR Exception"""
+class ASFNetworkWarning(Warning):
+    """
+    Base ASF Warning, not intended for direct use
+    Tip: Silence me to silence all child ASFWarnings
+    """
 
 
-class CMRConceptIDError(CMRError):
-    """Raise when CMR encounters a concept-id error"""
+class PairNotInFullStackWarning(ASFNetworkWarning):
+    """Warn when attempting to do something with a Pair that is not in Stack.full_stack"""
 
 
-class CMRIncompleteError(CMRError):
-    """Raise when CMR returns an incomplete page of results"""
+class OptionalDependencyWarning(ASFNetworkWarning):
+    """Warn when an optional dependency is not installed in the user environment"""

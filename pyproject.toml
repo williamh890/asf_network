@@ -24,7 +24,13 @@ classifiers=[
 dependencies = [
     "asf_search",
     "requests",
-    "shapely"
+    "shapely",
+    "pandas",
+    # Optional for estimate_s1_mean_coherence
+    "xarray",
+    "zarr",
+    "fsspec",
+    "s3fs"
 ]
 dynamic = ["version"]
 

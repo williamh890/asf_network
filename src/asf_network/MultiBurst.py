@@ -2,7 +2,7 @@ from collections import deque
 import requests
 from typing import Any, List, Dict
 
-from .exceptions import (
+from asf_network.exceptions import (
     InvalidMultiBurstCountError,
     MultipleOrbitError,
     InvalidMultiBurstTopologyError,
@@ -13,19 +13,19 @@ import numpy as np
 
 class MultiBurst:
     """
-    MultiBurst is a helper class that geographically validates collections of Sentinel-1 bursts in 
+    MultiBurst is a helper class that geographically validates collections of Sentinel-1 bursts in
     preparation of ordering multi-burst interferograms from HyP3
     """
 
     def __init__(self, multiburst_dict):
         """
-        multiburst_dict: 
+        multiburst_dict:
             keys: string burst ID
             values: tuple of included string subswaths
             e.g. {"burst_ID_1": ("IW1",), "burst_ID_2": ("IW1", "IW2", "IW3")}
         """
         self.multiburst_dict = multiburst_dict
-        self.burst_ids = [f"{burst}_{swath}" for 
+        self.burst_ids = [f"{burst}_{swath}" for
                           burst, swaths in self.multiburst_dict.items()
                           for swath in swaths]
         self.burst_metadata = self._get_burst_metadata()
@@ -87,11 +87,11 @@ class MultiBurst:
                     include_list.append(False)
             grid.append(include_list)
         return grid
-    
+
     def count_components_and_holes(self):
         """
         Performs a BFS search to count connected components and holes
-        
+
         This could be simplified by using scipy or Networkxx for BFS,
         but doing it without avoids adding either as a required dependency
         """
@@ -108,7 +108,7 @@ class MultiBurst:
             ( 0, -1),          ( 0, 1),
             ( 1, -1), ( 1, 0), ( 1, 1)
             ]
-        
+
         # # 4-connectivity
         # directions = [
         #              (-1, 0),
@@ -153,7 +153,7 @@ class MultiBurst:
                         hole_count += 1
 
         return component_count, hole_count
-    
+
     def get_burst_ids(self) -> List[str]:
         """
         Returns a list of full burst IDs (burst+swath) for every included burst
@@ -205,7 +205,7 @@ class MultiBurst:
     def _get_extent_wkt(self) -> str:
         """
         Returns a Well-Known-Text (WKT) string polygon of the
-        maximum extents (rectangular) for the collection of muti-bursts 
+        maximum extents (rectangular) for the collection of muti-bursts
         """
         burst_extents = [
             data['items'][0]['umm']['SpatialExtent']['HorizontalSpatialDomain']['Geometry']

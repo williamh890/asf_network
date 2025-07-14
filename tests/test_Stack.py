@@ -1,11 +1,11 @@
 from datetime import date
 import numpy as np
-import pandas as pd
 from pytest import raises
+import pandas as pd
 
 from asf_search.ASFSearchOptions import ASFSearchOptions
 from asf_search.search import product_search
-from asf_search.Stack import Stack, DateTypeError, PairNotInFullStackWarning
+from asf_network import Stack, DateTypeError, PairNotInFullStackWarning
 
 
 def test_create_stack():

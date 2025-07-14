@@ -1,20 +1,19 @@
 from collections import Counter
 from datetime import datetime, date, timedelta
 import importlib.util
-import numpy as np
 import pandas as pd
+import numpy as np
 from typing import Optional, Dict, Tuple, List
 import warnings
 
-from .ASFProduct import ASFProduct
-from .Pair import Pair
-from .Stack import Stack
-from .MultiBurst import MultiBurst
-from .search import geo_search
-from .ASFSearchOptions import ASFSearchOptions
-from .constants import PLATFORM
-from .warnings import OptionalDependencyWarning
-from asf_search import ASF_LOGGER
+from asf_search import ASFProduct, ASFSearchOptions, ASF_LOGGER
+from asf_search.constants import PLATFORM
+from asf_search.search import geo_search
+
+from asf_network.Pair import Pair
+from asf_network.Stack import Stack
+from asf_network.MultiBurst import MultiBurst
+from asf_network.exceptions import OptionalDependencyWarning
 
 
 class Network(Stack):
@@ -35,13 +34,13 @@ class Network(Stack):
         """
         geo_reference: an ASFProduct used as a georeference scene for the stack
         multiburst: a MultiBurst object describing a collection of bursts for a multi-burst Network
-        
+
         (pass geo_reference xor multiburst)
 
         perp_baseline: the perpendicular baseline for the SBAS stack
         inseason_temporal_baseline: the temporal baseline for the SBAS stack, not accounting for multiannual bridging
         bridge_year_threshold: the number of year for which to allow multiannual bridging
-        bridge_target_date: %m-%d string of the inseason bridge date to target. 
+        bridge_target_date: %m-%d string of the inseason bridge date to target.
                             Reference scenes for bridge pairs are valid within an inseason_temporal_baseline of this date.
         opts: ASFSearchOptions to limit the size of your Network and define seasons
               Recommended to include: "start", "end", "season"
@@ -69,8 +68,8 @@ class Network(Stack):
         self.temporal_baseline = (bridge_year_threshold * 365) + inseason_temporal_baseline
 
         super().__init__(
-            geo_reference=geo_reference, 
-            temporal_baseline=self.temporal_baseline, 
+            geo_reference=geo_reference,
+            temporal_baseline=self.temporal_baseline,
             opts=self.opts
             )
 
@@ -125,7 +124,7 @@ class Network(Stack):
             else:
                 multiburst_network = Network(
                     geo_reference=results[-1],
-                    perp_baseline=self.perp_baseline, 
+                    perp_baseline=self.perp_baseline,
                     inseason_temporal_baseline=self.inseason_temporal_baseline,
                     bridge_target_date=self.bridge_target_date,
                     bridge_year_threshold=self.bridge_year_threshold,
@@ -136,10 +135,10 @@ class Network(Stack):
     def _interesect_multiburst_stacks(self):
         """
         This function validates multiburst sbas stacks.
-        It is possible that not all burst stacks will contain the same set of date pairs. 
+        It is possible that not all burst stacks will contain the same set of date pairs.
         A valid multiburst SBAS stack should contain complete coverage over every burst, in
-        every date pair. 
-        
+        every date pair.
+
         Any burst pair that is not present in every burst stack is removed from all stacks.
         """
         all_subset_stacks = [i.subset_stack for i in self.additional_multiburst_networks]
@@ -178,10 +177,10 @@ class Network(Stack):
         # Only create multiannual bridge pairs if the off-season is longer than inseason_temporal_baseline
         if 365 - season_length > self.inseason_temporal_baseline:
 
-            # determine how far ref scene date is from target multi-annual bridge date 
+            # determine how far ref scene date is from target multi-annual bridge date
             days_from_bridge_date = np.abs(
                 (
-                    datetime.strptime(f"{self.bridge_target_date}-{pair.ref_date.year}", "%m-%d-%Y").date() 
+                    datetime.strptime(f"{self.bridge_target_date}-{pair.ref_date.year}", "%m-%d-%Y").date()
                     - pair.ref_date).days
                 )
             # Create lists of valid secondary scene date ranges.
@@ -212,7 +211,7 @@ class Network(Stack):
         """
         Plot the SBAS stack(s). Accepts a stack_dict or a list of stack_dicts.
         The largest stack is plotted in blue; others are plotted in distinct colors.
-        Possible member stacks to pass as stack_dict are: 
+        Possible member stacks to pass as stack_dict are:
             - `self.full_stack`: includes every possible pair in the stack, ignoring baselines
             - `self.subset_stack`: a possibly disconnected SBAS stack
             - `self.connected_substacks`: subset_stack, broken up into connected substacks
